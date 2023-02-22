@@ -6,7 +6,7 @@ const path = require("node:path");
 const token = process.env.BOT_TOKEN;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const eventsPath = path.join(__dirname, "../events");
+const eventsPath = path.join(__dirname, "./events");
 const eventFiles = fs
   .readdirSync(eventsPath)
   .filter((file) => file.endsWith(".js"));
@@ -22,7 +22,7 @@ for (const file of eventFiles) {
 }
 
 client.commands = new Collection();
-const commandsPath = path.join(__dirname, "../commands");
+const commandsPath = path.join(__dirname, "./commands");
 const commandFiles = fs
   .readdirSync(commandsPath)
   .filter((file) => file.endsWith(".js"));
