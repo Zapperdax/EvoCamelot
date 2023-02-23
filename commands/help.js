@@ -14,7 +14,8 @@ module.exports = {
           { name: "/ping", value: "ping" },
           { name: "/server", value: "server" },
           { name: "/user", value: "user" },
-          { name: "/help", value: "help" }
+          { name: "/help", value: "help" },
+          { name: "/setdonation", value: "Set Donation" }
         )
     ),
   async execute(interaction) {
@@ -35,7 +36,7 @@ module.exports = {
           name: "Moderation Commands",
           value: "/ban, /kick",
         },
-        { name: "Fun Commands", value: "/ping, /server, /user" },
+        { name: "Fun Commands", value: "/ping, /server, /user, /addDonation" },
         { name: "Help Commands", value: "/help" },
       ];
     } else {
@@ -66,6 +67,16 @@ module.exports = {
           embedTitle = `Command: ${command}`;
           embedDescription =
             "Use /help <command> To Get Information About A Specific Command\n [Examples]:\n1) /help Returns All Commands\n2) /help <command> Sends Information About Specific Command";
+          break;
+        case "Set Donation":
+          embedTitle = `Command: ${command}`;
+          embedDescription =
+            "Use This Command To Log Donation Of The User For The Current Week";
+          break;
+        default:
+          embedTitle = `Command Not Found`;
+          embedColor = "#FF0000";
+          embedDescription = `There Was No Command Found With The Name ${command}`;
           break;
       }
     }
