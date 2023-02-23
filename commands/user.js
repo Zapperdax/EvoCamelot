@@ -5,8 +5,7 @@ module.exports = {
     .setName("user")
     .setDescription("Provides Information About The User"),
   async execute(interaction) {
-    await interaction.reply(
-      `This Command Was Run By @${interaction.user.username}`
-    );
+    const user = interaction.user;
+    await interaction.reply(`This Command Was Run By ${user}`);
   },
 };
