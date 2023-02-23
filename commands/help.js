@@ -15,7 +15,8 @@ module.exports = {
           { name: "/server", value: "server" },
           { name: "/user", value: "user" },
           { name: "/help", value: "help" },
-          { name: "/setdonation", value: "Set Donation" }
+          { name: "/setdonation", value: "set sonation" },
+          { name: "/register", value: "register" }
         )
     ),
   async execute(interaction) {
@@ -36,7 +37,10 @@ module.exports = {
           name: "Moderation Commands",
           value: "/ban, /kick",
         },
-        { name: "Fun Commands", value: "/ping, /server, /user, /addDonation" },
+        {
+          name: "Fun Commands",
+          value: "/ping, /server, /user, /setdonation, /register",
+        },
         { name: "Help Commands", value: "/help" },
       ];
     } else {
@@ -68,10 +72,14 @@ module.exports = {
           embedDescription =
             "Use /help <command> To Get Information About A Specific Command\n [Examples]:\n1) /help Returns All Commands\n2) /help <command> Sends Information About Specific Command";
           break;
-        case "Set Donation":
+        case "set donation":
           embedTitle = `Command: ${command}`;
           embedDescription =
             "Use This Command To Log Donation Of The User For The Current Week";
+          break;
+        case "register":
+          embedTitle = `Command: ${command}`;
+          embedDescription = "Use This Command To Register Into The Clan";
           break;
         default:
           embedTitle = `Command Not Found`;

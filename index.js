@@ -2,6 +2,7 @@ const { Client, Events, GatewayIntentBits, Collection } = require("discord.js");
 require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
+const mongoose = require("mongoose");
 
 const token = process.env.BOT_TOKEN;
 
@@ -40,4 +41,9 @@ for (const file of commandFiles) {
   }
 }
 
-client.login(token);
+mongoose.set("strictQuery", true);
+
+mongoose.connect(process.env.MONGODB_URL, () => {
+  console.log("Database Connected");
+  client.login(token);
+});
