@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const User = require("../Model/userModel");
+const Donation = require("../Model/donationModel");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -20,7 +21,10 @@ module.exports = {
       return;
     }
 
-    const user = await User.findOne({ name: interaction.user.id });
+    const { weeklyDonation } = await Donation.findOne({
+      _id: "63fb483ba6fd21c8d67e04c3",
+    });
+    const user = await User.findOne({ id: interaction.user.id });
     if (!user) {
       await interaction.editReply("Please Consider Registering");
       return;
@@ -33,7 +37,7 @@ module.exports = {
       })
       .addFields({
         name: "Amount Donated This Week",
-        value: user.amount.toString() + " / 275000",
+        value: user.amount.toString() + `/ ${weeklyDonation}`,
       })
       .setTimestamp()
       .setFooter({

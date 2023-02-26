@@ -21,7 +21,8 @@ module.exports = {
     }
     try {
       const user = new User({
-        name: interaction.user.id,
+        id: interaction.user.id,
+        name: interaction.user.tag,
       });
       await user.save();
       await interaction.editReply("Successfully Registered Into The Clan");

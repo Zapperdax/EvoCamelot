@@ -52,7 +52,7 @@ for (const file of commandFiles) {
 client.on("messageCreate", async (message) => {
   try {
     if (
-      message.channel.id === "1077933585908117536" &&
+      message.channel.id === "813262057331884032" &&
       message.content.startsWith(".cl donate")
     ) {
       const user = message.author.id;
@@ -64,19 +64,23 @@ client.on("messageCreate", async (message) => {
       if (botMessage.first().embeds[0]) {
         if (botMessage.first().embeds[0].title.startsWith("Success")) {
           const amount = message.content.replace(/^\D+/g, "") * 1;
-          const currentUser = await User.findOne({ name: user.toString() });
+          const currentUser = await User.findOne({ id: user.toString() });
           if (!currentUser) {
-            message.channel.send("User Not Found");
+            message.channel.send(
+              "You Donated Into The Clan, Without Registration, Please Use /register, And Ask An Admin To Log Your Donation."
+            );
             return;
           }
           const previousDonation = currentUser.amount;
           await User.findOneAndUpdate(
-            { name: user.toString() },
+            { id: user.toString() },
             { $set: { amount: previousDonation + amount } }
           );
-          message.channel.send("Successfully Added");
+          message.channel.send("Successfully Addition Of Donation");
         } else {
-          message.channel.send("Failed To Log");
+          message.channel.send(
+            "Failed To Log Donation, Please Ask An Admin To Log Your Donation."
+          );
         }
       } else {
         message.channel.send("Slow Down Please");
