@@ -74,7 +74,7 @@ module.exports = {
       interaction.user.id === interaction.user.id && interaction.isButton();
     const collector = message.createMessageComponentCollector({
       filter,
-      time: 10000,
+      time: 60000,
     });
 
     const previousButton = row.components[0];
