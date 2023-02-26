@@ -76,7 +76,7 @@ client.on("messageCreate", async (message) => {
             { id: user.toString() },
             { $set: { amount: previousDonation + amount } }
           );
-          message.channel.send("Successfully Addition Of Donation");
+          message.channel.send("Successful Addition Of Donation");
         } else {
           message.channel.send(
             "Failed To Log Donation, Please Ask An Admin To Log Your Donation."

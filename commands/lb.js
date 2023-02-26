@@ -96,14 +96,12 @@ module.exports = {
       });
     });
 
-    collector.on("end", async () => {
-      const disabledRow = new ActionRowBuilder().addComponents(
-        previousButton.setDisabled(true),
-        nextButton.setDisabled(true)
-      );
-      await message.edit({
-        components: [disabledRow],
-      });
+    collector.on("end", async (collected, reason) => {
+      if (reason === "time") {
+        await message.edit({
+          components: [],
+        });
+      }
     });
   },
 };
