@@ -66,15 +66,15 @@ module.exports = {
       time: 60000,
     });
 
+    const previousButton = row.components[0];
+    const nextButton = row.components[1];
+
     collector.on("collect", async (interaction) => {
       if (interaction.customId === "previous") {
         currentPage--;
       } else if (interaction.customId === "next") {
         currentPage++;
       }
-
-      const previousButton = row.components[0];
-      const nextButton = row.components[1];
 
       if (currentPage === 1) {
         previousButton.setDisabled(true);
