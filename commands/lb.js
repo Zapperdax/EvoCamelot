@@ -3,8 +3,8 @@ const {
   EmbedBuilder,
   ButtonStyle,
   ButtonBuilder,
-
   ActionRowBuilder,
+  PermissionsBitField,
 } = require("discord.js");
 const User = require("../Model/userModel");
 
@@ -13,6 +13,17 @@ module.exports = {
     .setName("lb")
     .setDescription("Shows Weekly Contribution Of Everyone In Clan"),
   async execute(interaction) {
+    if (
+      !interaction.channel
+        .permissionsFor(interaction.client.user)
+        .has(PermissionsBitField.Flags.ViewChannel)
+    ) {
+      await interaction.reply({
+        content: "I do not have permission to view this channel.",
+        ephemeral: true,
+      });
+      return;
+    }
     const donators = await User.find({}).sort({ amount: -1 });
 
     const itemsPerPage = 10;
@@ -63,7 +74,7 @@ module.exports = {
       interaction.user.id === interaction.user.id && interaction.isButton();
     const collector = message.createMessageComponentCollector({
       filter,
-      time: 60000,
+      time: 10000,
     });
 
     const previousButton = row.components[0];
