@@ -37,7 +37,9 @@ module.exports = {
       })
       .addFields({
         name: "Amount Donated This Week",
-        value: user.amount.toString() + `/ ${weeklyDonation}`,
+        value:
+          new Intl.NumberFormat().format(user.amount).toString() +
+          ` / ${new Intl.NumberFormat().format(weeklyDonation)}`,
       })
       .setTimestamp()
       .setFooter({

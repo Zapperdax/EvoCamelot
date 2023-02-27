@@ -17,6 +17,7 @@ module.exports = {
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName
     );
+
     if (!role || !interaction.member.roles.cache.has(role.id)) {
       await interaction.reply({
         content: `You Don't Have Permission To Use This Command`,
@@ -42,7 +43,9 @@ module.exports = {
           return;
         }
         await interaction.reply(
-          `Successfully Placed ${amount.toString()} As ${targettedUser}'s Donation`
+          `Successfully Placed ${new Intl.NumberFormat()
+            .format(amount)
+            .toString()} As ${targettedUser}'s Donation`
         );
       }
     );
