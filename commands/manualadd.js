@@ -12,7 +12,7 @@ module.exports = {
       option.setName("amount").setDescription("Add Amount").setRequired(true)
     ),
   async execute(interaction) {
-    const roleName = "Admin";
+    const roleName = "donation-tracker";
 
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName
