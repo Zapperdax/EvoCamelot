@@ -9,6 +9,7 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply();
     const roleName = "The Chosen";
+    let emoji = "❌";
 
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName
@@ -29,6 +30,11 @@ module.exports = {
       await interaction.editReply("Please Consider Registering");
       return;
     }
+
+    if (user.amount >= weeklyDonation) {
+      emoji = "✅";
+    }
+
     const infoEmbed = new EmbedBuilder()
       .setColor("#bb8368")
       .setAuthor({
@@ -39,7 +45,9 @@ module.exports = {
         name: "Amount Donated This Week",
         value:
           new Intl.NumberFormat().format(user.amount).toString() +
-          ` / ${new Intl.NumberFormat().format(weeklyDonation)}`,
+          ` / ${new Intl.NumberFormat()
+            .format(weeklyDonation)
+            .toString()}\nStatus: ${emoji}`,
       })
       .setTimestamp()
       .setFooter({

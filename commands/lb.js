@@ -13,6 +13,19 @@ module.exports = {
     .setName("lb")
     .setDescription("Shows Weekly Contribution Of Everyone In Clan"),
   async execute(interaction) {
+    const roleName = "The Chosen";
+
+    const role = interaction.member.roles.cache.find(
+      (r) => r.name === roleName
+    );
+    if (!role || !interaction.member.roles.cache.has(role.id)) {
+      await interaction.reply({
+        content: `You Don't Have Permission To Use This Command`,
+        ephemeral: true,
+      });
+      return;
+    }
+
     if (
       !interaction.channel
         .permissionsFor(interaction.client.user)
@@ -24,6 +37,7 @@ module.exports = {
       });
       return;
     }
+
     const donators = await User.find({}).sort({ amount: -1 });
 
     const itemsPerPage = 10;

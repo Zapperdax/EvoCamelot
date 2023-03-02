@@ -4,6 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const mongoose = require("mongoose");
 const User = require("./Model/userModel");
+const Donation = require("./Model/donationModel");
 
 const token = process.env.BOT_TOKEN;
 
@@ -63,8 +64,12 @@ client.on("messageCreate", async (message) => {
       });
       if (botMessage.first().embeds[0]) {
         if (botMessage.first().embeds[0].title.startsWith("Success")) {
+          const { weeklyDonation } = await Donation.findOne({
+            _id: "63fb483ba6fd21c8d67e04c3",
+          });
           const amount = message.content.replace(/^\D+/g, "") * 1;
           const currentUser = await User.findOne({ id: user.toString() });
+          let donated = false;
           if (!currentUser) {
             message.channel.send(
               "You Donated Into The Clan, Without Registration, Please Use /register, And Ask An Admin To Log Your Donation."
@@ -72,9 +77,18 @@ client.on("messageCreate", async (message) => {
             return;
           }
           const previousDonation = currentUser.amount;
+          if (previousDonation + amount >= weeklyDonation) {
+            donated = true;
+          }
+          console.log(weeklyDonation);
           await User.findOneAndUpdate(
             { id: user.toString() },
-            { $set: { amount: previousDonation + amount } }
+            {
+              $set: {
+                amount: previousDonation + amount,
+                donated: donated ? true : false,
+              },
+            }
           );
           message.channel.send("Successful Addition Of Donation");
         } else {

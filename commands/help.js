@@ -36,11 +36,11 @@ module.exports = {
       fields = [
         {
           name: "Moderation Commands",
-          value: "/ban, /kick",
+          value: "/ban, /kick, /setdonation, /manualadd, /unregister",
         },
         {
           name: "Fun Commands",
-          value: "/ping, /server, /user, /setdonation, /register, /info",
+          value: "/ping, /server, /user, /register, /info",
         },
         { name: "Help Commands", value: "/help" },
       ];

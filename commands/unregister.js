@@ -1,22 +1,26 @@
 const {
   SlashCommandBuilder,
-  ActionRowBuilder,
   ButtonBuilder,
-  ButtonStyle,
   EmbedBuilder,
+  ButtonStyle,
+  ActionRowBuilder,
 } = require("discord.js");
 const User = require("../Model/userModel");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("resetweekly")
-    .setDescription("Resets Everyone's Weekly Donation"),
+    .setName("unregister")
+    .setDescription("Deletes User From The Database")
+    .addStringOption((option) =>
+      option.setName("userid").setDescription("Paste User ID").setRequired(true)
+    ),
   async execute(interaction) {
     const roleName = "Admin";
 
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName
     );
+
     if (!role || !interaction.member.roles.cache.has(role.id)) {
       await interaction.reply({
         content: `You Don't Have Permission To Use This Command`,
@@ -24,6 +28,8 @@ module.exports = {
       });
       return;
     }
+
+    const targettedUser = interaction.options.getString("userid");
 
     const confirmButton = new ButtonBuilder()
       .setCustomId("confirm")
@@ -42,8 +48,12 @@ module.exports = {
         name: interaction.user.tag,
         iconURL: interaction.user.displayAvatarURL(),
       })
-      .setDescription("Are You Sure You Want To Reset Weekly Donation?")
+      .setDescription(
+        `Are You Sure You Want To Delete ${"<@" + targettedUser + ">"}?`
+      )
       .setFooter({ text: "[Warning] - This Action Cannot Be Undone" });
+
+    console.log(targettedUser);
 
     const row = new ActionRowBuilder().addComponents(
       confirmButton,
@@ -52,7 +62,7 @@ module.exports = {
 
     try {
       await interaction.reply({
-        content: "Are You Sure You Want To Reset?",
+        content: "Are You Sure?",
         embeds: [resetEmbed],
         components: [row],
       });
@@ -66,14 +76,15 @@ module.exports = {
       collector.on("collect", async (i) => {
         if (i.customId === "confirm") {
           if (i.user.id === interaction.user.id) {
-            User.updateMany({}, { amount: 0, donated: false }, (err) => {
-              if (err) {
-                console.error(err);
-                return;
-              }
+            const deletedUser = await User.findOneAndDelete({
+              id: targettedUser,
             });
+            if (!deletedUser) {
+              await i.update({ content: "No User Found" });
+              return;
+            }
             await i.update({
-              content: "Successfully Resetted Weekly Donations",
+              content: `Successfully Deleted ${deletedUser.name}`,
             });
           }
         } else if (i.customId === "cancel") {
@@ -86,8 +97,7 @@ module.exports = {
         await interaction.editReply({ components: [], embeds: [] });
       });
     } catch (e) {
-      console.error(e);
-      await interaction.reply("There Was An Error Executing The Command");
+      await interaction.editReply("There Was An Error Executing This Command");
     }
   },
 };
