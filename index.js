@@ -67,7 +67,10 @@ client.on("messageCreate", async (message) => {
           const { weeklyDonation } = await Donation.findOne({
             _id: "63fb483ba6fd21c8d67e04c3",
           });
-          const amount = message.content.replace(/^\D+/g, "") * 1;
+          const text = botMessage.first().embeds[0].description;
+          const regex = /you have donated \*\*([\d,]+)\*\* Gold/;
+          const match = await text.match(regex);
+          const amount = Number(match[1].replace(/,/g, ""));
           const currentUser = await User.findOne({ id: user.toString() });
           let donated = false;
           if (!currentUser) {
@@ -80,7 +83,6 @@ client.on("messageCreate", async (message) => {
           if (previousDonation + amount >= weeklyDonation) {
             donated = true;
           }
-          console.log(weeklyDonation);
           await User.findOneAndUpdate(
             { id: user.toString() },
             {
@@ -90,7 +92,9 @@ client.on("messageCreate", async (message) => {
               },
             }
           );
-          message.channel.send("Successful Addition Of Donation");
+          message.channel.send(
+            `Successfully Added ${amount} Gold In Your Donation, Use /info To See`
+          );
         } else {
           message.channel.send(
             "Failed To Log Donation, Please Ask An Admin To Log Your Donation."

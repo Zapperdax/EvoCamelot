@@ -66,7 +66,7 @@ module.exports = {
       collector.on("collect", async (i) => {
         if (i.customId === "confirm") {
           if (i.user.id === interaction.user.id) {
-            User.updateMany({}, { amount: 0, donated: false }, (err) => {
+            User.updateMany({}, { donated: true }, (err) => {
               if (err) {
                 console.error(err);
                 return;
