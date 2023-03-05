@@ -93,7 +93,9 @@ client.on("messageCreate", async (message) => {
             }
           );
           message.channel.send(
-            `Successfully Added ${amount} Gold In Your Donation, Use /info To See`
+            `Successfully Added ${new Intl.NumberFormat().format(
+              amount
+            )} Gold In Your Donation, Use /info To See`
           );
         } else {
           message.channel.send(
