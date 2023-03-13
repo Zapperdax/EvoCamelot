@@ -50,13 +50,19 @@ module.exports = {
 
       const embed = new EmbedBuilder()
         .setColor("#bb8368")
-        .setTitle("Top Donators")
-        .setDescription(`Showing page ${page} of ${totalPages}`);
+        .setTitle("This Weeks Donations")
+        .setDescription(
+          `Showing All The Donations In Order From Highest To Lowest`
+        )
+        .setFooter({ text: `Showing page ${page} of ${totalPages}` });
 
       for (let i = startIndex; i < endIndex && i < donators.length; i++) {
         embed.addFields({
-          name: `#${i + 1}. ${donators[i].name}`,
-          value: `Donated: ${donators[i].amount}`,
+          name: `#${i + 1} | ${donators[i].name}`,
+          value: `Donation: ${new Intl.NumberFormat().format(
+            donators[i].amount
+          )}`,
+          inline: true,
         });
       }
 
@@ -66,16 +72,18 @@ module.exports = {
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("previous")
-        .setLabel("Previous")
         .setStyle(ButtonStyle.Secondary)
         .setEmoji("⬅️")
         .setDisabled(true),
       new ButtonBuilder()
         .setCustomId("next")
-        .setLabel("Next")
         .setStyle(ButtonStyle.Success)
         .setEmoji("➡️")
-        .setDisabled(totalPages === 1)
+        .setDisabled(totalPages === 1),
+      new ButtonBuilder()
+        .setCustomId("trash")
+        .setStyle(ButtonStyle.Danger)
+        .setEmoji("🗑️")
     );
 
     const message = await interaction.reply({
@@ -99,6 +107,10 @@ module.exports = {
         currentPage--;
       } else if (interaction.customId === "next") {
         currentPage++;
+      } else if (interaction.customId === "trash") {
+        collector.stop();
+        message.delete();
+        return;
       }
 
       if (currentPage === 1) {

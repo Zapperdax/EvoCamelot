@@ -52,9 +52,10 @@ for (const file of commandFiles) {
 
 client.on("messageCreate", async (message) => {
   try {
+    const messageRegex = /^\.cl donate [1-9]\d*(?:\s+.*)?$/;
     if (
       message.channel.id === "813262057331884032" &&
-      message.content.startsWith(".cl donate")
+      message.content.match(messageRegex)
     ) {
       const user = message.author.id;
       const filter = (m) => m.author.id === "571027211407196161";

@@ -8,7 +8,7 @@ module.exports = {
   execute(client) {
     console.log(`Logged In As ${client.user.tag}`);
 
-    const channel = client.channels.cache.get("1077933585908117536");
+    const channel = client.channels.cache.get("813262057331884032");
     if (!channel) {
       console.log("No Channel Found");
       return;
