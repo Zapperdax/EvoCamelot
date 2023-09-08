@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  extraWeeks: {
+    type: Number,
+    default: 0,
+  }
 });
 
 const User = mongoose.model("User", userSchema);
