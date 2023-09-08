@@ -58,7 +58,7 @@ client.on("messageCreate", async (message) => {
       message.content.match(messageRegex)
     ) {
       const user = message.author.id;
-      const filter = (m) => m.author.id === "571027211407196161";
+      const filter = (m) => m.author.id === "571027211407196161"; //bot id
       const botMessage = await message.channel.awaitMessages({
         filter,
         max: 1,
@@ -73,15 +73,24 @@ client.on("messageCreate", async (message) => {
           const match = await text.match(regex);
           const amount = Number(match[1].replace(/,/g, ""));
           const currentUser = await User.findOne({ id: user.toString() });
-          let donated = false;
           if (!currentUser) {
             message.channel.send(
               "You Donated Into The Clan, Without Registration, Please Use /register, And Ask An Admin To Log Your Donation."
             );
             return;
           }
+          let donated = false;
           const previousDonation = currentUser.amount;
-          if (previousDonation + amount >= weeklyDonation) {
+          amount += previousDonation;
+          const extra =
+            amount / (weeklyDonation * (currentUser.extraWeeks + 1));
+          if (extra >= 1) {
+            await User.findOneAndUpdate(
+              { id: user.toString() },
+              { $set: { extraWeeks: extra + currentUser.extraWeeks } }
+            );
+          }
+          if (amount >= weeklyDonation) {
             donated = true;
           }
           await User.findOneAndUpdate(

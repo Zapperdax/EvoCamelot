@@ -58,7 +58,7 @@ module.exports = {
 
       for (let i = startIndex; i < endIndex && i < donators.length; i++) {
         embed.addFields({
-          name: `#${i + 1} | ${donators[i].name}`,
+          name: `#${i + 1} | <@${donators[i].id}>`,
           value: `Donation: ${new Intl.NumberFormat().format(
             donators[i].amount
           )}`,
