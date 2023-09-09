@@ -38,7 +38,7 @@ module.exports = {
       return;
     }
 
-    const donators = await User.find({ extraWeeks: { lt: 0 } });
+    const donators = await User.find({ extraWeeks: { $lte: 0 } });
 
     if (donators.length > 0) {
       const itemsPerPage = 10;
@@ -51,16 +51,16 @@ module.exports = {
 
         const embed = new EmbedBuilder()
           .setColor("#bb8368")
-          .setTitle("This Weeks Donations")
+          .setTitle("Users With Pending Donations")
           .setDescription(
-            `Showing All The Donations In Order From Highest To Lowest`
+            `Showing All The Users With Pending Donations`
           )
           .setFooter({ text: `Showing page ${page} of ${totalPages}` });
 
         for (let i = startIndex; i < endIndex && i < donators.length; i++) {
           embed.addFields({
             name: `#${i + 1} | <@${donators[i].id}>`,
-            value: `Weeks Skipped: ${Math.abs(donators[i].extraWeeks)}`,
+            value: `Weeks Skipped: ${Math.abs(donators[i].extraWeeks) + 1}`,
 
             inline: true,
           });
@@ -142,7 +142,7 @@ module.exports = {
       });
     } else {
       await interaction.reply({
-        content: "Every Has Donated So Far, No Users Found",
+        content: "Every One Has Donated So Far, No Users Found",
       });
       return;
     }

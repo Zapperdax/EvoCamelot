@@ -16,7 +16,7 @@ module.exports = {
     const job0 = new cron.CronJob(
       "0 0 4 * * SUN",
       async () => {
-        const nonDonatedUsers = await User.find({ extraWeeks: { lt: 0 } });
+        const nonDonatedUsers = await User.find({ extraWeeks: { lte: 0 } });
         if (nonDonatedUsers.length > 0) {
           let pingTheseUsers = "";
           nonDonatedUsers.map((user) => {

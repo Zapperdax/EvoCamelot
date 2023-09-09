@@ -103,34 +103,38 @@ module.exports = {
     const nextButton = row.components[1];
 
     collector.on("collect", async (interaction) => {
-      if (interaction.customId === "previous") {
-        currentPage--;
-      } else if (interaction.customId === "next") {
-        currentPage++;
-      } else if (interaction.customId === "trash") {
-        collector.stop();
-        message.delete();
-        return;
+      try{
+        if (interaction.customId === "previous") {
+          currentPage--;
+        } else if (interaction.customId === "next") {
+          currentPage++;
+        } else if (interaction.customId === "trash") {
+          collector.stop();
+          message.delete();
+          return;
+        }
+  
+        if (currentPage === 1) {
+          previousButton.setDisabled(true);
+        } else {
+          previousButton.setDisabled(false);
+        }
+  
+        if (currentPage === totalPages) {
+          nextButton.setDisabled(true);
+        } else {
+          nextButton.setDisabled(false);
+        }
+  
+        const updatedEmbed = generateEmbed(currentPage);
+  
+        await interaction.update({
+          embeds: [updatedEmbed],
+          components: [row],
+        });
+      } catch(err){
+        console.log(err)
       }
-
-      if (currentPage === 1) {
-        previousButton.setDisabled(true);
-      } else {
-        previousButton.setDisabled(false);
-      }
-
-      if (currentPage === totalPages) {
-        nextButton.setDisabled(true);
-      } else {
-        nextButton.setDisabled(false);
-      }
-
-      const updatedEmbed = generateEmbed(currentPage);
-
-      await interaction.update({
-        embeds: [updatedEmbed],
-        components: [row],
-      });
     });
 
     collector.on("end", async (collected, reason) => {

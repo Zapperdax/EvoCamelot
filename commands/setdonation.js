@@ -35,7 +35,8 @@ module.exports = {
           return;
         }
         await interaction.reply(
-          `Amount Set Successfully To ${weeklyDonation.toString()}`
+          `Amount Set Successfully To ${new Intl.NumberFormat()
+            .format(weeklyDonation).toString()}`
         );
       }
     );

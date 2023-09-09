@@ -71,7 +71,7 @@ client.on("messageCreate", async (message) => {
           const text = botMessage.first().embeds[0].description;
           const regex = /you have donated \*\*([\d,]+)\*\* Gold/;
           const match = await text.match(regex);
-          const amount = Number(match[1].replace(/,/g, ""));
+          let amount = Number(match[1].replace(/,/g, ""));
           const currentUser = await User.findOne({ id: user.toString() });
           if (!currentUser) {
             message.channel.send(
@@ -82,13 +82,17 @@ client.on("messageCreate", async (message) => {
           let donated = false;
           const previousDonation = currentUser.amount;
           amount += previousDonation;
-          const extra =
-            amount / (weeklyDonation * (currentUser.extraWeeks + 1));
-          if (extra >= 1) {
-            await User.findOneAndUpdate(
-              { id: user.toString() },
-              { $set: { extraWeeks: extra + currentUser.extraWeeks } }
-            );
+          if (currentUser.extraWeeks <= 0) {
+            
+          } else {
+            const extra =
+              amount / (weeklyDonation * (currentUser.extraWeeks + 1));
+            if (extra >= 1) {
+              await User.findOneAndUpdate(
+                { id: user.toString() },
+                { $set: { extraWeeks: extra + currentUser.extraWeeks } }
+              );
+            }
           }
           if (amount >= weeklyDonation) {
             donated = true;
