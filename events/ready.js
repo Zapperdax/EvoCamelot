@@ -46,7 +46,7 @@ module.exports = {
               amount: 0,
               donated: {
                 $cond: {
-                  if: { $lt: ["$extraWeeks", 0] },
+                  if: { $lte: ["$extraWeeks", 0] },
                   then: false, 
                   else: "$donated",
                 },
