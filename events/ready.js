@@ -7,6 +7,12 @@ module.exports = {
   once: true,
   execute(client) {
     console.log(`Logged In As ${client.user.tag}`);
+    client.user.setPresence({
+      activity: {
+        name: "Tracking Donations",
+        type: "PLAYING",
+      },
+    });
     const channel = client.channels.cache.get("813262057331884032");
     if (!channel) {
       console.log("No Channel Found");
@@ -16,7 +22,6 @@ module.exports = {
     const job0 = new cron.CronJob(
       "0 0 4 * * SUN",
       async () => {
-
         await User.updateMany(
           { donated: false },
           { $inc: { extraWeeks: -1 } },
@@ -47,7 +52,7 @@ module.exports = {
               donated: {
                 $cond: {
                   if: { $lte: ["$extraWeeks", 0] },
-                  then: false, 
+                  then: false,
                   else: "$donated",
                 },
               },
@@ -58,13 +63,12 @@ module.exports = {
               console.error(err);
               return;
             }
-        
+
             channel.send(
               `Weekly Donations Have Been Resetted, You Guys Can Start Donating For This Week Now ${"<@&740824003932848199>"}`
             );
           }
         );
-        
       },
       null,
       true,
