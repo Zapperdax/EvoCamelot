@@ -31,7 +31,7 @@ module.exports = {
       return;
     }
 
-    if (user.amount >= weeklyDonation) {
+    if (user.amount >= weeklyDonation || user.extraWeeks > 0) {
       emoji = "✅";
     }
 
@@ -47,7 +47,7 @@ module.exports = {
           new Intl.NumberFormat().format(user.amount).toString() +
           ` / ${new Intl.NumberFormat()
             .format(weeklyDonation)
-            .toString()}\nStatus: ${emoji}`,
+            .toString()}\nStatus: ${emoji}\nExtra Weeks: ${user.extraWeeks}`,
       })
       .setTimestamp()
       .setFooter({

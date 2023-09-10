@@ -13,7 +13,7 @@ module.exports = {
     .setName("pendingdonation")
     .setDescription("Shows Weekly Contribution Of Everyone In Clan"),
   async execute(interaction) {
-    const roleName = "Admin";
+    const roleName = "The Chosen";
 
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName
