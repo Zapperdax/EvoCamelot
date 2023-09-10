@@ -11,7 +11,7 @@ const {
   module.exports = {
     data: new SlashCommandBuilder()
       .setName("extradonation")
-      .setDescription("Shows Weekly Contribution Of Everyone In Clan"),
+      .setDescription("Shows Extra Contribution Of Users In Clan"),
     async execute(interaction) {
       const roleName = "The Chosen";
   

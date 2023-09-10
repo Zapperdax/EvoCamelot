@@ -11,7 +11,7 @@ const User = require("../Model/userModel");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("pendingdonation")
-    .setDescription("Shows Weekly Contribution Of Everyone In Clan"),
+    .setDescription("Shows Users With Pending Donations In Clan"),
   async execute(interaction) {
     const roleName = "The Chosen";
 
