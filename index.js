@@ -82,26 +82,23 @@ client.on("messageCreate", async (message) => {
           let donated = false;
           const previousDonation = currentUser.amount;
           amount += previousDonation;
-          if (currentUser.extraWeeks <= 0) {
-            
-          } else {
-            const extra =
-              amount / (weeklyDonation * (currentUser.extraWeeks + 1));
-            if (extra >= 1) {
-              await User.findOneAndUpdate(
-                { id: user.toString() },
-                { $set: { extraWeeks: extra + currentUser.extraWeeks } }
-              );
-            }
+
+          const extra = Math.floor((amount - weeklyDonation) / weeklyDonation);
+          if (extra >= 1) {
+            await User.findOneAndUpdate(
+              { id: user.toString() },
+              { $set: { extraWeeks: extra + currentUser.extraWeeks } }
+            );
           }
           if (amount >= weeklyDonation) {
             donated = true;
           }
+          
           await User.findOneAndUpdate(
             { id: user.toString() },
             {
               $set: {
-                amount: previousDonation + amount,
+                amount,
                 donated: donated ? true : false,
               },
             }

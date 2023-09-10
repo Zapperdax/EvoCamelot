@@ -16,17 +16,7 @@ module.exports = {
     const job0 = new cron.CronJob(
       "0 0 4 * * SUN",
       async () => {
-        const nonDonatedUsers = await User.find({ extraWeeks: { lte: 0 } });
-        if (nonDonatedUsers.length > 0) {
-          let pingTheseUsers = "";
-          nonDonatedUsers.map((user) => {
-            pingTheseUsers += `${"<@" + user.id + ">" + " "}`;
-          });
-          channel.send(
-            "List Of Users Who Didn't Donate This Week -> " + pingTheseUsers
-          );
-        }
-        
+
         await User.updateMany(
           { donated: false },
           { $inc: { extraWeeks: -1 } },
@@ -37,6 +27,17 @@ module.exports = {
             }
           }
         );
+
+        const nonDonatedUsers = await User.find({ donated: false });
+        if (nonDonatedUsers.length > 0) {
+          let pingTheseUsers = "";
+          nonDonatedUsers.map((user) => {
+            pingTheseUsers += `${"<@" + user.id + ">" + " "}`;
+          });
+          channel.send(
+            "List Of Users Who Didn't Donate This Week -> " + pingTheseUsers
+          );
+        }
 
         await User.updateMany({}, { amount: 0, donated: false }, (err) => {
           if (err) {
