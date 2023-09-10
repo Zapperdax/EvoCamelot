@@ -38,7 +38,7 @@ module.exports = {
       return;
     }
 
-    const donators = await User.find({ extraWeeks: { $lte: 0 } });
+    const donators = await User.find({ extraWeeks: { $lt: 0 } });
 
     if (donators.length > 0) {
       const itemsPerPage = 10;
