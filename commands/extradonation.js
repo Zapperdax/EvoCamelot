@@ -142,7 +142,7 @@ const {
         });
       } else {
         await interaction.reply({
-          content: "Every One Has Donated So Far, No Users Found",
+          content: "No Users Found With Extra Donations",
         });
         return;
       }
