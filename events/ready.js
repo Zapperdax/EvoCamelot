@@ -39,16 +39,32 @@ module.exports = {
           );
         }
 
-        await User.updateMany({}, { amount: 0, donated: false }, (err) => {
-          if (err) {
-            console.error(err);
-            return;
+        await User.updateMany(
+          {},
+          {
+            $set: {
+              amount: 0,
+              donated: {
+                $cond: {
+                  if: { $lt: ["$extraWeeks", 0] },
+                  then: false, 
+                  else: "$donated",
+                },
+              },
+            },
+          },
+          (err) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+        
+            channel.send(
+              `Weekly Donations Have Been Resetted, You Guys Can Start Donating For This Week Now ${"<@&740824003932848199>"}`
+            );
           }
-
-          channel.send(
-            `Weekly Donations Have Been Resetted, You Guys Can Start Donating For This Week Now ${"<@&740824003932848199>"}`
-          );
-        });
+        );
+        
       },
       null,
       true,
