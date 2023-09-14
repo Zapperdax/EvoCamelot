@@ -92,8 +92,7 @@ client.on("messageCreate", async (message) => {
               );
             }
           } else if (currentUser.extraWeeks > 0) {
-            const extra =
-              amount / (weeklyDonation * (currentUser.extraWeeks + 1));
+            const extra = Math.floor(amount / (weeklyDonation * (currentUser.extraWeeks + 2)));
             if (extra >= 1) {
               await User.findOneAndUpdate(
                 { id: user.toString() },
