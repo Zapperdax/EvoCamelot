@@ -1,6 +1,7 @@
 const { Events } = require("discord.js");
 const cron = require("cron");
 const User = require("../Model/userModel");
+const config = require('../config.js');
 
 module.exports = {
   name: Events.ClientReady,
@@ -23,7 +24,7 @@ module.exports = {
       "0 0 4 * * SUN",
       async () => {
         await User.updateMany(
-          { donated: false },
+          { amount: {$lt: config.weeklyDonation} },
           { $inc: { extraWeeks: -1 } },
           (err) => {
             if (err) {

@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const mongoose = require("mongoose");
 const User = require("./Model/userModel");
-const Donation = require("./Model/donationModel");
+const config = require("./config.js");
 
 const token = process.env.BOT_TOKEN;
 
@@ -54,20 +54,18 @@ client.on("messageCreate", async (message) => {
   try {
     const messageRegex = /^\.cl donate [1-9]\d*(?:\s+.*)?$/;
     if (
-      message.channel.id === "813262057331884032" &&
+      message.channel.id === config.donationChannelId &&
       message.content.match(messageRegex)
     ) {
       const user = message.author.id;
-      const filter = (m) => m.author.id === "571027211407196161"; //bot id
+      const filter = (m) => m.author.id === config.anigameBotId; //bot id
       const botMessage = await message.channel.awaitMessages({
         filter,
         max: 1,
       });
       if (botMessage.first().embeds[0]) {
         if (botMessage.first().embeds[0].title.startsWith("Success")) {
-          const { weeklyDonation } = await Donation.findOne({
-            _id: "63fb483ba6fd21c8d67e04c3",
-          });
+          const weeklyDonation = config.weeklyDonation;
           const text = botMessage.first().embeds[0].description;
           const regex = /you have donated \*\*([\d,]+)\*\* Gold/;
           const match = await text.match(regex);
@@ -83,17 +81,33 @@ client.on("messageCreate", async (message) => {
           const previousDonation = currentUser.amount;
           amount += previousDonation;
 
-          const extra = Math.floor((amount - weeklyDonation) / weeklyDonation);
-          if (extra >= 1) {
-            await User.findOneAndUpdate(
-              { id: user.toString() },
-              { $set: { extraWeeks: extra + currentUser.extraWeeks } }
+          if (currentUser.extraWeeks === 0) {
+            const extra = Math.floor(
+              (amount - weeklyDonation) / weeklyDonation
             );
+            if (extra >= 1) {
+              await User.findOneAndUpdate(
+                { id: user.toString() },
+                { $set: { extraWeeks: extra + currentUser.extraWeeks } }
+              );
+            }
+          } else if (currentUser.extraWeeks > 0) {
+            const extra =
+              amount / (weeklyDonation * (currentUser.extraWeeks + 1));
+            if (extra >= 1) {
+              await User.findOneAndUpdate(
+                { id: user.toString() },
+                { $set: { extraWeeks: extra + currentUser.extraWeeks } }
+              );
+            }
+          } else {
+            
           }
+
           if (amount >= weeklyDonation) {
             donated = true;
           }
-          
+
           await User.findOneAndUpdate(
             { id: user.toString() },
             {
@@ -114,7 +128,7 @@ client.on("messageCreate", async (message) => {
           );
         }
       } else {
-        message.channel.send("Slow Down Please");
+        message.channel.send("Bot Is On Cool Down ...");
       }
     }
   } catch (e) {
