@@ -4,6 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const mongoose = require("mongoose");
 const User = require("./Model/userModel");
+const Donation = require("./Model/donationModel");
 const config = require("./config.js");
 
 const token = process.env.BOT_TOKEN;
@@ -65,7 +66,7 @@ client.on("messageCreate", async (message) => {
       });
       if (botMessage.first().embeds[0]) {
         if (botMessage.first().embeds[0].title.startsWith("Success")) {
-          const weeklyDonation = config.weeklyDonation;
+          const {weeklyDonation} = Donation.findOne({_id: '63fb483ba6fd21c8d67e04c3'});
           const text = botMessage.first().embeds[0].description;
           const regex = /you have donated \*\*([\d,]+)\*\* Gold/;
           const match = await text.match(regex);
@@ -92,7 +93,9 @@ client.on("messageCreate", async (message) => {
               );
             }
           } else if (currentUser.extraWeeks > 0) {
-            const extra = Math.floor(amount / (weeklyDonation * (currentUser.extraWeeks + 2)));
+            const extra = Math.floor(
+              amount / (weeklyDonation * (currentUser.extraWeeks + 2))
+            );
             if (extra >= 1) {
               await User.findOneAndUpdate(
                 { id: user.toString() },
@@ -100,10 +103,18 @@ client.on("messageCreate", async (message) => {
               );
             }
           } else {
-            
+            const extra = Math.floor(
+              (amount - weeklyDonation) / weeklyDonation
+            );
+            if (extra >= 1) {
+              await User.findOneAndUpdate(
+                { id: user.toString() },
+                { $set: { extraWeeks: extra } }
+              );
+            }
           }
 
-          if (amount >= weeklyDonation) {
+          if (amount >= weeklyDonation && currentUser.extraWeeks >= 0) {
             donated = true;
           }
 
