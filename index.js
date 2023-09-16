@@ -98,6 +98,9 @@ client.on("messageCreate", async (message) => {
           //This is if user got out from negtive donation to positive
           if (amount >= 0 && amount < weeklyDonation * 2) {
             updateObject.$set.extraWeeks = 0;
+          } else if (amount < 0) {
+            const extra = Math.floor(amount / weeklyDonation);
+            updateObject.$set.extraWeeks = extra;
           }
 
           if (amount >= weeklyDonation && updateObject.$set.extraWeeks >= 0) {
