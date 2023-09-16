@@ -22,16 +22,6 @@ module.exports = {
         const { weeklyDonation } = await Donation.findOne({
           _id: "63fb483ba6fd21c8d67e04c3",
         });
-        await User.updateMany(
-          { amount: { $lt: weeklyDonation } },
-          { $inc: { extraWeeks: -1 } },
-          (err) => {
-            if (err) {
-              console.error(err);
-              return;
-            }
-          }
-        );
 
         const nonDonatedUsers = await User.find({ donated: false });
         if (nonDonatedUsers.length > 0) {
@@ -48,6 +38,7 @@ module.exports = {
           {},
           {
             $inc: { amount: -weeklyDonation },
+            $inc: { extraWeeks: -1 },
             $set: {
               donated: {
                 $cond: {
