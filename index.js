@@ -66,7 +66,9 @@ client.on("messageCreate", async (message) => {
       });
       if (botMessage.first().embeds[0]) {
         if (botMessage.first().embeds[0].title.startsWith("Success")) {
-          const {weeklyDonation} = Donation.findOne({_id: '63fb483ba6fd21c8d67e04c3'});
+          const { weeklyDonation } = Donation.findOne({
+            _id: "63fb483ba6fd21c8d67e04c3",
+          });
           const text = botMessage.first().embeds[0].description;
           const regex = /you have donated \*\*([\d,]+)\*\* Gold/;
           const match = await text.match(regex);
@@ -82,43 +84,23 @@ client.on("messageCreate", async (message) => {
           const previousDonation = currentUser.amount;
           amount += previousDonation;
 
-          if (currentUser.extraWeeks === 0) {
-            const extra = Math.floor(
-              (amount - weeklyDonation) / weeklyDonation
-            );
-            if (extra >= 1) {
-              await User.findOneAndUpdate(
-                { id: user.toString() },
-                { $set: { extraWeeks: extra + currentUser.extraWeeks } }
-              );
-            }
-          } else if (currentUser.extraWeeks > 0) {
-            const extra = Math.floor(
-              amount / (weeklyDonation * (currentUser.extraWeeks + 2))
-            );
-            if (extra >= 1) {
-              await User.findOneAndUpdate(
-                { id: user.toString() },
-                { $set: { extraWeeks: extra + currentUser.extraWeeks } }
-              );
-            }
-          } else {
-            
+          const updateObject = {
+            $set: {
+              amount,
+            },
+          };
+
+          const extra = Math.floor(amount - weeklyDonation / weeklyDonation);
+          if (extra >= 1) {
+            updateObject.$set.extraWeeks = extra;
           }
 
           if (amount >= weeklyDonation && currentUser.extraWeeks >= 0) {
             donated = true;
           }
+          updateObject.$set.donated = donated;
 
-          await User.findOneAndUpdate(
-            { id: user.toString() },
-            {
-              $set: {
-                amount,
-                donated: donated ? true : false,
-              },
-            }
-          );
+          await User.findOneAndUpdate({ id: user.toString() }, updateObject);
           message.channel.send(
             `Successfully Updated ${new Intl.NumberFormat().format(
               amount

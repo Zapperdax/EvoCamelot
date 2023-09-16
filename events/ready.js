@@ -1,7 +1,7 @@
 const { Events } = require("discord.js");
 const cron = require("cron");
 const User = require("../Model/userModel");
-const config = require('../config.js');
+const config = require("../config.js");
 const Donation = require("../Model/donationModel");
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
   once: true,
   execute(client) {
     console.log(`Logged In As ${client.user.tag}`);
-   
+
     const channel = client.channels.cache.get(config.donationChannelId);
     if (!channel) {
       console.log("No Channel Found");
@@ -19,9 +19,11 @@ module.exports = {
     const job0 = new cron.CronJob(
       "0 0 4 * * SUN",
       async () => {
-        const {weeklyDonation} = await Donation.findOne({_id: '63fb483ba6fd21c8d67e04c3'})
+        const { weeklyDonation } = await Donation.findOne({
+          _id: "63fb483ba6fd21c8d67e04c3",
+        });
         await User.updateMany(
-          { amount: {$lt: weeklyDonation} },
+          { amount: { $lt: weeklyDonation } },
           { $inc: { extraWeeks: -1 } },
           (err) => {
             if (err) {
@@ -45,8 +47,8 @@ module.exports = {
         await User.updateMany(
           {},
           {
+            $inc: { amount: -weeklyDonation },
             $set: {
-              amount: 0,
               donated: {
                 $cond: {
                   if: { $lte: ["$extraWeeks", 0] },
