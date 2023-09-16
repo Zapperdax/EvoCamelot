@@ -89,22 +89,27 @@ client.on("messageCreate", async (message) => {
               amount,
             },
           };
+
           const extra = Math.floor((amount - weeklyDonation) / weeklyDonation);
-          console.log(extra);
           if (extra >= 1) {
             updateObject.$set.extraWeeks = extra;
           }
 
-          if (amount >= weeklyDonation && currentUser.extraWeeks >= 0) {
+          //This is if user got out from negtive donation to positive
+          if (amount >= 0 && amount < weeklyDonation * 2) {
+            updateObject.$set.extraWeeks = 0;
+          }
+
+          if (amount >= weeklyDonation && updateObject.$set.extraWeeks >= 0) {
             donated = true;
           }
           updateObject.$set.donated = donated;
 
           await User.findOneAndUpdate({ id: user.toString() }, updateObject);
           message.channel.send(
-            `Successfully Updated ${new Intl.NumberFormat().format(
+            `Successfully Updated Your Gold To ${new Intl.NumberFormat().format(
               amount
-            )} Gold In Your Donation, Use /info To See`
+            )} In Your Donation, Use /info To See`
           );
         } else {
           message.channel.send(
