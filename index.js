@@ -66,7 +66,7 @@ client.on("messageCreate", async (message) => {
       });
       if (botMessage.first().embeds[0]) {
         if (botMessage.first().embeds[0].title.startsWith("Success")) {
-          const { weeklyDonation } = Donation.findOne({
+          const { weeklyDonation } = await Donation.findOne({
             _id: "63fb483ba6fd21c8d67e04c3",
           });
           const text = botMessage.first().embeds[0].description;
@@ -89,8 +89,8 @@ client.on("messageCreate", async (message) => {
               amount,
             },
           };
-
-          const extra = Math.floor(amount - weeklyDonation / weeklyDonation);
+          const extra = Math.floor((amount - weeklyDonation) / weeklyDonation);
+          console.log(extra);
           if (extra >= 1) {
             updateObject.$set.extraWeeks = extra;
           }
