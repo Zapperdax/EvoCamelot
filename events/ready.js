@@ -2,19 +2,15 @@ const { Events } = require("discord.js");
 const cron = require("cron");
 const User = require("../Model/userModel");
 const config = require('../config.js');
+const Donation = require("../Model/donationModel");
 
 module.exports = {
   name: Events.ClientReady,
   once: true,
   execute(client) {
     console.log(`Logged In As ${client.user.tag}`);
-    client.user.setPresence({
-      activity: {
-        name: "Tracking Donations",
-        type: "PLAYING",
-      },
-    });
-    const channel = client.channels.cache.get("813262057331884032");
+   
+    const channel = client.channels.cache.get(config.donationChannelId);
     if (!channel) {
       console.log("No Channel Found");
       return;
@@ -23,8 +19,9 @@ module.exports = {
     const job0 = new cron.CronJob(
       "0 0 4 * * SUN",
       async () => {
+        const {weeklyDonation} = await Donation.findOne({_id: '63fb483ba6fd21c8d67e04c3'})
         await User.updateMany(
-          { amount: {$lt: config.weeklyDonation} },
+          { amount: {$lt: weeklyDonation} },
           { $inc: { extraWeeks: -1 } },
           (err) => {
             if (err) {
