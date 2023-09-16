@@ -101,7 +101,7 @@ client.on("messageCreate", async (message) => {
               );
             }
           } else {
-            
+
           }
 
           if (amount >= weeklyDonation) {
@@ -118,7 +118,7 @@ client.on("messageCreate", async (message) => {
             }
           );
           message.channel.send(
-            `Successfully Added ${new Intl.NumberFormat().format(
+            `Successfully Updated ${new Intl.NumberFormat().format(
               amount
             )} Gold In Your Donation, Use /info To See`
           );
