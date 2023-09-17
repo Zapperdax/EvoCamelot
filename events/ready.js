@@ -37,8 +37,7 @@ module.exports = {
         await User.updateMany(
           {},
           {
-            $inc: { amount: -weeklyDonation },
-            $inc: { extraWeeks: -1 },
+            $inc: { amount: -weeklyDonation, extraWeeks: -1 },
             $set: {
               donated: {
                 $cond: {
