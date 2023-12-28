@@ -66,7 +66,9 @@ client.on("messageCreate", async (message) => {
       });
       if (botMessage.first().embeds[0]) {
         if (botMessage.first().embeds[0].title.startsWith("Success")) {
-          const {weeklyDonation} = Donation.findOne({_id: '63fb483ba6fd21c8d67e04c3'});
+          const { weeklyDonation } = await Donation.findOne({
+            _id: "63fb483ba6fd21c8d67e04c3",
+          });
           const text = botMessage.first().embeds[0].description;
           const regex = /you have donated \*\*([\d,]+)\*\* Gold/;
           const match = await text.match(regex);
@@ -82,55 +84,35 @@ client.on("messageCreate", async (message) => {
           const previousDonation = currentUser.amount;
           amount += previousDonation;
 
-          if (currentUser.extraWeeks === 0) {
-            const extra = Math.floor(
-              (amount - weeklyDonation) / weeklyDonation
-            );
-            if (extra >= 1) {
-              await User.findOneAndUpdate(
-                { id: user.toString() },
-                { $set: { extraWeeks: extra + currentUser.extraWeeks } }
-              );
-            }
-          } else if (currentUser.extraWeeks > 0) {
-            const extra = Math.floor(
-              amount / (weeklyDonation * (currentUser.extraWeeks + 2))
-            );
-            if (extra >= 1) {
-              await User.findOneAndUpdate(
-                { id: user.toString() },
-                { $set: { extraWeeks: extra + currentUser.extraWeeks } }
-              );
-            }
-          } else {
-            const extra = Math.floor(
-              (amount - weeklyDonation) / weeklyDonation
-            );
-            if (extra >= 1) {
-              await User.findOneAndUpdate(
-                { id: user.toString() },
-                { $set: { extraWeeks: extra } }
-              );
-            }
+          const updateObject = {
+            $set: {
+              amount,
+            },
+          };
+
+          const extra = Math.floor((amount - weeklyDonation) / weeklyDonation);
+          if (extra >= 1) {
+            updateObject.$set.extraWeeks = extra;
           }
 
-          if (amount >= weeklyDonation && currentUser.extraWeeks >= 0) {
+          //This is if user got out from negtive donation to positive
+          if (amount >= 0 && amount < weeklyDonation * 2) {
+            updateObject.$set.extraWeeks = 0;
+          } else if (amount < 0) {
+            const extra = Math.floor(amount / weeklyDonation);
+            updateObject.$set.extraWeeks = extra;
+          }
+
+          if (amount >= weeklyDonation && updateObject.$set.extraWeeks >= 0) {
             donated = true;
           }
+          updateObject.$set.donated = donated;
 
-          await User.findOneAndUpdate(
-            { id: user.toString() },
-            {
-              $set: {
-                amount,
-                donated: donated ? true : false,
-              },
-            }
-          );
+          await User.findOneAndUpdate({ id: user.toString() }, updateObject);
           message.channel.send(
-            `Successfully Added ${new Intl.NumberFormat().format(
+            `Successfully Updated Your Gold To ${new Intl.NumberFormat().format(
               amount
-            )} Gold In Your Donation, Use /info To See`
+            )} In Your Donation, Use /info To See`
           );
         } else {
           message.channel.send(

@@ -10,10 +10,13 @@ module.exports = {
       option.setName("user").setDescription("Select User").setRequired(true)
     )
     .addNumberOption((option) =>
-      option.setName("extraweek").setDescription("Add Extra Week(s)").setRequired(true)
+      option
+        .setName("extraweek")
+        .setDescription("Add Extra Week(s)")
+        .setRequired(true)
     ),
   async execute(interaction) {
-    const roleName = "donation-tracker";
+    const roleName = "Admin";
 
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName
@@ -29,7 +32,6 @@ module.exports = {
 
     const targettedUser = interaction.options.getUser("user");
     const extraweek = interaction.options.getNumber("extraweek");
-    
 
     User.findOneAndUpdate(
       { id: targettedUser.id },

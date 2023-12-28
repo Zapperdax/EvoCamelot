@@ -61,7 +61,7 @@ module.exports = {
           name: `#${i + 1} | <@${donators[i].id}>`,
           value: `Donation: ${new Intl.NumberFormat().format(
             donators[i].amount
-          )}`,
+          )}\nExtra Weeks: ${donators[i].extraWeeks}`,
           inline: true,
         });
       }
@@ -103,7 +103,7 @@ module.exports = {
     const nextButton = row.components[1];
 
     collector.on("collect", async (interaction) => {
-      try{
+      try {
         if (interaction.customId === "previous") {
           currentPage--;
         } else if (interaction.customId === "next") {
@@ -113,27 +113,27 @@ module.exports = {
           message.delete();
           return;
         }
-  
+
         if (currentPage === 1) {
           previousButton.setDisabled(true);
         } else {
           previousButton.setDisabled(false);
         }
-  
+
         if (currentPage === totalPages) {
           nextButton.setDisabled(true);
         } else {
           nextButton.setDisabled(false);
         }
-  
+
         const updatedEmbed = generateEmbed(currentPage);
-  
+
         await interaction.update({
           embeds: [updatedEmbed],
           components: [row],
         });
-      } catch(err){
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
     });
 
