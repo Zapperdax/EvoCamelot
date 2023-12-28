@@ -78,12 +78,16 @@ module.exports = {
         const nonDonatedUsers = await User.find({ donated: false });
         if (nonDonatedUsers.length > 0) {
           const promises = nonDonatedUsers.map(async (user) => {
-            const userId = user.id;
-            const userToDm = await client.users.fetch(userId);
-            const dmChannel = await userToDm.createDM();
-            return dmChannel.send(
-              "Hi, I'm Here To Remind You Of Your Pending Weekly Donation In Evo's Lair ^^"
-            );
+            try{
+              const userId = user.id;
+              const userToDm = await client.users.fetch(userId);
+              const dmChannel = await userToDm.createDM();
+              return dmChannel.send(
+                "Hi, I'm Here To Remind You Of Your Pending Weekly Donation In Evo's Lair ^^"
+              );
+            } catch (err) {
+              console.log(err);
+            }
           });
           Promise.all(promises)
             .then(() => {
