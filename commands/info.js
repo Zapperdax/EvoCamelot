@@ -8,7 +8,7 @@ module.exports = {
     .setDescription("Provides Information About Your Current Week's Donation"),
   async execute(interaction) {
     await interaction.deferReply();
-    const roleName = "The Chosen";
+    const roleName = "RK  - GUILDMEMBERS";
     let emoji = "❌";
 
     const role = interaction.member.roles.cache.find(
@@ -23,7 +23,7 @@ module.exports = {
     }
 
     const { weeklyDonation } = await Donation.findOne({
-      _id: "63fb483ba6fd21c8d67e04c3",
+      _id: "65ab9dc1430e1e5242e9a2ee",
     });
     const user = await User.findOne({ id: interaction.user.id });
     if (!user) {

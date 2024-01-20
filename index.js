@@ -51,76 +51,139 @@ for (const file of commandFiles) {
   }
 }
 
+// client.on("messageCreate", async (message) => {
+//   try {
+//     const messageRegex = /^\.cl donate [1-9]\d*(?:\s+.*)?$/;
+//     if (
+//       message.channel.id === config.donationChannelId &&
+//       message.content.match(messageRegex)
+//     ) {
+//       const user = message.author.id;
+//       const filter = (m) => m.author.id === config.anigameBotId; //bot id
+//       const botMessage = await message.channel.awaitMessages({
+//         filter,
+//         max: 1,
+//       });
+//       if (botMessage.first().embeds[0]) {
+//         if (botMessage.first().embeds[0].title.startsWith("Success")) {
+//           const { weeklyDonation } = await Donation.findOne({
+//             _id: "65ab9dc1430e1e5242e9a2ee",
+//           });
+//           const text = botMessage.first().embeds[0].description;
+//           const regex = /you have donated \*\*([\d,]+)\*\* Gold/;
+//           const match = await text.match(regex);
+//           let amount = Number(match[1].replace(/,/g, ""));
+//           const currentUser = await User.findOne({ id: user.toString() });
+//           if (!currentUser) {
+//             message.channel.send(
+//               "You Donated Into The Clan, Without Registration, Please Use /register, And Ask An Admin To Log Your Donation."
+//             );
+//             return;
+//           }
+//           let donated = false;
+//           const previousDonation = currentUser.amount;
+//           amount += previousDonation;
+
+//           const updateObject = {
+//             $set: {
+//               amount,
+//             },
+//           };
+
+//           const extra = Math.floor((amount - weeklyDonation) / weeklyDonation);
+//           if (extra >= 1) {
+//             updateObject.$set.extraWeeks = extra;
+//           }
+
+//           //This is if user got out from negtive donation to positive
+//           if (amount >= 0 && amount < weeklyDonation * 2) {
+//             updateObject.$set.extraWeeks = 0;
+//           } else if (amount < 0) {
+//             const extra = Math.floor(amount / weeklyDonation);
+//             updateObject.$set.extraWeeks = extra;
+//           }
+
+//           if (amount >= weeklyDonation && updateObject.$set.extraWeeks >= 0) {
+//             donated = true;
+//           }
+//           updateObject.$set.donated = donated;
+
+//           await User.findOneAndUpdate({ id: user.toString() }, updateObject);
+//           message.channel.send(
+//             `Successfully Updated Your Gold To ${new Intl.NumberFormat().format(
+//               amount
+//             )} In Your Donation, Use /info To See`
+//           );
+//         } else {
+//           message.channel.send(
+//             "Failed To Log Donation, Please Ask An Admin To Log Your Donation."
+//           );
+//         }
+//       } else {
+//         message.channel.send("Bot Is On Cool Down ...");
+//       }
+//     }
+//   } catch (e) {
+//     console.error(e);
+//   }
+// });
+
 client.on("messageCreate", async (message) => {
   try {
-    const messageRegex = /^\.cl donate [1-9]\d*(?:\s+.*)?$/;
-    if (
-      message.channel.id === config.donationChannelId &&
-      message.content.match(messageRegex)
-    ) {
-      const user = message.author.id;
-      const filter = (m) => m.author.id === config.anigameBotId; //bot id
-      const botMessage = await message.channel.awaitMessages({
-        filter,
-        max: 1,
-      });
-      if (botMessage.first().embeds[0]) {
-        if (botMessage.first().embeds[0].title.startsWith("Success")) {
-          const { weeklyDonation } = await Donation.findOne({
-            _id: "63fb483ba6fd21c8d67e04c3",
-          });
-          const text = botMessage.first().embeds[0].description;
-          const regex = /you have donated \*\*([\d,]+)\*\* Gold/;
-          const match = await text.match(regex);
-          let amount = Number(match[1].replace(/,/g, ""));
-          const currentUser = await User.findOne({ id: user.toString() });
-          if (!currentUser) {
-            message.channel.send(
-              "You Donated Into The Clan, Without Registration, Please Use /register, And Ask An Admin To Log Your Donation."
-            );
-            return;
-          }
-          let donated = false;
-          const previousDonation = currentUser.amount;
-          amount += previousDonation;
+    if (message.author.id == config.camelotbotid) {
+      const regex = /^(.+) has donated \*\*([\d,]+)\*\*/.exec(message.content);
 
-          const updateObject = {
-            $set: {
-              amount,
-            },
-          };
-
-          const extra = Math.floor((amount - weeklyDonation) / weeklyDonation);
-          if (extra >= 1) {
-            updateObject.$set.extraWeeks = extra;
-          }
-
-          //This is if user got out from negtive donation to positive
-          if (amount >= 0 && amount < weeklyDonation * 2) {
-            updateObject.$set.extraWeeks = 0;
-          } else if (amount < 0) {
-            const extra = Math.floor(amount / weeklyDonation);
-            updateObject.$set.extraWeeks = extra;
-          }
-
-          if (amount >= weeklyDonation && updateObject.$set.extraWeeks >= 0) {
-            donated = true;
-          }
-          updateObject.$set.donated = donated;
-
-          await User.findOneAndUpdate({ id: user.toString() }, updateObject);
+      if (regex) {
+        const username = regex[1];
+        let amount = parseInt(regex[2].replace(/,/g, ""), 10);
+        const user = client.users.cache.find(
+          (user) => user.username == username
+        );
+        const { weeklyDonation } = await Donation.findOne({
+          _id: "63fb483ba6fd21c8d67e04c3",
+        });
+        const currentUser = await User.findOne({ id: user.id.toString() });
+        if (!currentUser) {
           message.channel.send(
-            `Successfully Updated Your Gold To ${new Intl.NumberFormat().format(
-              amount
-            )} In Your Donation, Use /info To See`
+            "You Donated Into The Guild, Without Registration, Please Use /register, And Ask An Admin To Log Your Donation."
           );
-        } else {
-          message.channel.send(
-            "Failed To Log Donation, Please Ask An Admin To Log Your Donation."
-          );
+          return;
         }
-      } else {
-        message.channel.send("Bot Is On Cool Down ...");
+
+        let donated = false;
+        const previousDonation = currentUser.amount;
+        amount += previousDonation;
+
+        const updateObject = {
+          $set: {
+            amount,
+          },
+        };
+
+        const extra = Math.floor((amount - weeklyDonation) / weeklyDonation);
+        if (extra >= 1) {
+          updateObject.$set.extraWeeks = extra;
+        }
+
+        //This is if user got out from negtive donation to positive
+        if (amount >= 0 && amount < weeklyDonation * 2) {
+          updateObject.$set.extraWeeks = 0;
+        } else if (amount < 0) {
+          const extra = Math.floor(amount / weeklyDonation);
+          updateObject.$set.extraWeeks = extra;
+        }
+
+        if (amount >= weeklyDonation && updateObject.$set.extraWeeks >= 0) {
+          donated = true;
+        }
+        updateObject.$set.donated = donated;
+
+        await User.findOneAndUpdate({ id: user.id.toString() }, updateObject);
+        message.channel.send(
+          `Successfully Updated Your Coins To ${new Intl.NumberFormat().format(
+            amount
+          )} In Your Donation, Use /info To See`
+        );
       }
     }
   } catch (e) {

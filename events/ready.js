@@ -17,11 +17,11 @@ module.exports = {
     }
 
     const job0 = new cron.CronJob(
-      "0 0 9 * * SUN",
+      "0 0 5 * * THU",
       async () => {
         try {
           const { weeklyDonation } = await Donation.findOne({
-            _id: "63fb483ba6fd21c8d67e04c3",
+            _id: "65ab9dc1430e1e5242e9a2ee",
           });
 
           const nonDonatedUsers = await User.find({ donated: false });
@@ -48,7 +48,7 @@ module.exports = {
           );
 
           channel.send(
-            `Weekly Donations Have Been Resetted, You Guys Can Start Donating For This Week Now ${"<@&740824003932848199>"}`
+            `Weekly Donations Have Been Resetted, You Guys Can Start Donating For This Week Now ${"<@&1124515159747072123>"}`
           );
         } catch (err) {
           console.error(err);
@@ -59,7 +59,7 @@ module.exports = {
       "Asia/Karachi"
     );
     const job1 = new cron.CronJob(
-      "0 0 9 * * FRI",
+      "0 0 5 * * SUN",
       async () => {
         const nonDonatedUsers = await User.find({ donated: false });
         if (nonDonatedUsers.length > 0) {
@@ -69,7 +69,7 @@ module.exports = {
               const userToDm = await client.users.fetch(userId);
               const dmChannel = await userToDm.createDM();
               return dmChannel.send(
-                "Hi, I'm Here To Remind You Of Your Pending Weekly Donation In Evo's Lair ^^"
+                "Hi, I'm Here To Remind You Of Your Pending Weekly Donation In RK Royals ^^"
               );
             } catch (err) {
               console.log(err);

@@ -13,7 +13,7 @@ module.exports = {
     .setName("lb")
     .setDescription("Shows Weekly Contribution Of Everyone In Clan"),
   async execute(interaction) {
-    const roleName = "The Chosen";
+    const roleName = "RK  - GUILDMEMBERS";
 
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName

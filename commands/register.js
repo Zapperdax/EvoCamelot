@@ -4,10 +4,10 @@ const User = require("../Model/userModel");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("register")
-    .setDescription("Register To Clan"),
+    .setDescription("Register To Guild"),
   async execute(interaction) {
     await interaction.deferReply();
-    const roleName = "The Chosen";
+    const roleName = "RK  - GUILDMEMBERS";
 
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName
@@ -25,10 +25,10 @@ module.exports = {
         name: interaction.user.tag,
       });
       await user.save();
-      await interaction.editReply("Successfully Registered Into The Clan");
+      await interaction.editReply("Successfully Registered Into The Guild");
     } catch (e) {
       if (e.code === 11000) {
-        await interaction.editReply("You're Already Registered To The Clan");
+        await interaction.editReply("You're Already Registered To The Guild");
       }
     }
   },

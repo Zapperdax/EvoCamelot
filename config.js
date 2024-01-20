@@ -1,7 +1,7 @@
 const config = {
     weeklyDonation: 300000,
-    anigameBotId: '571027211407196161',
-    donationChannelId: '813262057331884032',
+    camelotbotid: '706183309943767112',
+    donationChannelId: '1124368919927468112',
 }
 
 module.exports = config;
