@@ -140,7 +140,7 @@ client.on("messageCreate", async (message) => {
           (user) => user.username == username
         );
         const { weeklyDonation } = await Donation.findOne({
-          _id: "63fb483ba6fd21c8d67e04c3",
+          id: "63fb483ba6fd21c8d67e04c3",
         });
         const currentUser = await User.findOne({ id: user.id.toString() });
         if (!currentUser) {

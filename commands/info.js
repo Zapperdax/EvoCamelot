@@ -23,7 +23,7 @@ module.exports = {
     }
 
     const { weeklyDonation } = await Donation.findOne({
-      _id: "65ab9dc1430e1e5242e9a2ee",
+      id: "65ae2d24daa6bb84061ca9b4",
     });
     const user = await User.findOne({ id: interaction.user.id });
     if (!user) {

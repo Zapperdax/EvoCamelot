@@ -26,7 +26,7 @@ module.exports = {
 
     const weeklyDonation = interaction.options.getString("value");
     Donation.findOneAndUpdate(
-      { _id: "65ab9dc1430e1e5242e9a2ee" },
+      { _id: "65ae2d24daa6bb84061ca9b4" },
       { weeklyDonation },
       { upsert: true, new: true },
       async (err) => {

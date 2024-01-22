@@ -30,7 +30,7 @@ module.exports = {
     const targettedUser = interaction.options.getUser("user");
     const amount = interaction.options.getNumber("amount");
     const { weeklyDonation } = await Donation.findOne({
-      _id: "63fb483ba6fd21c8d67e04c3",
+      id: "63fb483ba6fd21c8d67e04c3",
     });
 
     User.findOneAndUpdate(
