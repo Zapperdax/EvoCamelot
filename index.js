@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Collection } = require("discord.js");
+const { Client, GatewayIntentBits, Collection, ActivityType } = require("discord.js");
 require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
@@ -14,6 +14,7 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildPresences,
   ],
 });
 
@@ -50,6 +51,12 @@ for (const file of commandFiles) {
     );
   }
 }
+
+client.on("ready", () => {
+  client.user.setActivity("Over Guild Donations.", {
+    type: ActivityType.Watching,
+  });
+});
 
 // client.on("messageCreate", async (message) => {
 //   try {
@@ -131,7 +138,7 @@ for (const file of commandFiles) {
 client.on("messageCreate", async (message) => {
   try {
     if (message.author.id == config.camelotbotid) {
-      const regex = /^(.+) has donated \*\*([\d,]+)\*\*/.exec(message.content);
+      const regex = /^(.+?) has donated \*\*([\d,]+)\*\*/.exec(message.content);
 
       if (regex) {
         const username = regex[1];

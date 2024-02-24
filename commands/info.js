@@ -8,7 +8,7 @@ module.exports = {
     .setDescription("Provides Information About Your Current Week's Donation"),
   async execute(interaction) {
     await interaction.deferReply();
-    const roleName = "RK  - GUILDMEMBERS";
+    const roleName = "Gatcha";
     let emoji = "❌";
 
     const role = interaction.member.roles.cache.find(

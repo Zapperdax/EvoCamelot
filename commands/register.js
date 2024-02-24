@@ -7,7 +7,7 @@ module.exports = {
     .setDescription("Register To Guild"),
   async execute(interaction) {
     await interaction.deferReply();
-    const roleName = "RK  - GUILDMEMBERS";
+    const roleName = "Gatcha";
 
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName

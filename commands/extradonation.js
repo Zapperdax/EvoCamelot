@@ -13,7 +13,7 @@ module.exports = {
     .setName("extradonation")
     .setDescription("Shows Extra Contribution Of Users In Guild"),
   async execute(interaction) {
-    const roleName = "RK  - GUILDMEMBERS";
+    const roleName = "Gatcha";
 
     const role = interaction.member.roles.cache.find(
       (r) => r.name === roleName
